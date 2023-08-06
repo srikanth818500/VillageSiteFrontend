@@ -1,0 +1,13 @@
+.card-success {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 10px;
+    background-color: rgb(14, 15, 14);
+    color: white;
+    text-align: center;
+    font-size: 24px; 
+    z-index: 9999;
+  }
+  
