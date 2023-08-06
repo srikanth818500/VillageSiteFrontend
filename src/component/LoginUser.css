@@ -1,0 +1,82 @@
+.split-screen {
+    display: flex;
+    height: 100vh;
+  }
+  
+  .left-half {
+    flex: 1;
+    background-color: #9A616D;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .left-half img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 1rem 0 0 1rem;
+  }
+  
+  .right-half {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    background-color: #FFFFFF;
+    margin-left: 1rem; /* Add margin to the left side */
+  }
+  
+  form {
+    max-width: 400px;
+    width: 70%;
+  }
+  
+  form input,
+  form button {
+    width: 70%;
+    margin-bottom: 1rem;
+  }
+  
+  form button {
+    background-color: #000;
+    color: #fff;
+    padding: 0.75rem;
+    border: none;
+    border-radius: 0.25rem;
+    cursor: pointer;
+  }
+  
+  form input[type="text"],
+  form input[type="password"] {
+    padding: 0.75rem;
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+  }
+  .logo-icon {
+    color: #ff6219;
+  }
+  
+  .login-form {
+    letter-spacing: 1px;
+    color: #393f81;
+  }
+  .card {
+    border-radius: 1rem;
+    box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+  }
+  
+  
+  .form-control-1 {
+    height: 30px;
+    width: 70%;
+    box-sizing: border-box; /* Ensure the width includes padding and borders */
+    padding: 0.375rem 0.75rem; /* Adjust the padding as needed */
+    border: 1px solid #ccc;
+    border-radius: 0.25rem;
+  }
+  
+  .form-control-lg {
+    height: 50px;
+  }
+  
