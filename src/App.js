@@ -8,9 +8,11 @@ import Header from './component/Header';
 import Places from './component/Places';
 
 function App() {
+  const phoneNumber=sessionStorage.getItem('loggeduser')
+  const userLoggedIn=!!phoneNumber;
   return (
     <div className="App">
-      <Header />
+     {userLoggedIn && <Header />}
       {/* Wrap the entire application with the UserContextProvider */}
      
         <Routes>
