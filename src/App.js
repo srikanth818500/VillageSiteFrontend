@@ -6,6 +6,7 @@ import LoginUser from './component/LoginUser';
 import UserDashboard from './component/UserDashboard';
 import Header from './component/Header';
 import Places from './component/Places';
+import { CreateMatch } from './component/CreateMatch';
 
 function App() {
   const phoneNumber=sessionStorage.getItem('loggeduser');
@@ -20,6 +21,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/userpage" element={<UserDashboard />} />
           <Route path="/places" element={<Places />} />
+          <Route path="/creatematch" element={<CreateMatch />} />
         </Routes>
   
     </div>
