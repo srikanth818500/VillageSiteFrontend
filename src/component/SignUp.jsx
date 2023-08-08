@@ -15,6 +15,7 @@ export const SignUp = () => {
   const [playerType, setPlayerType] = useState('');
   const [checkpassword,setcheckpassword]=useState('');
   const [error,setError]=useState('');
+  const [dateOfBirth,setdateOfBirth]=useState('');
   const navigate = useNavigate();
   const phoneNumber1 = sessionStorage.getItem('loggeduser');
   
@@ -23,11 +24,13 @@ export const SignUp = () => {
     axios.post(`http://localhost:8080/api/v1/getDetails/${phoneNumber1}`)
       .then(response => {
         const user = response.data[0];
+        console.log(user);
         setFirstName(user.firstname || '');
         setLastName(user.last_name || '');
         setEmail(user.email_id || '');
         setPhoneNumber(user.phone_number || '');
         setcheckpassword(user.password || '');
+        setdateOfBirth(user.date_of_birth || '');
         //setConfirmPassword(user.confirmPassword || '');
         setPlayerType(user.player_type || '');
       })
@@ -46,6 +49,7 @@ export const SignUp = () => {
       lastName,
       emailId,
       phoneNumber,
+      dateOfBirth,
       password,
       playerType,
     };
@@ -69,6 +73,7 @@ export const SignUp = () => {
       lastName,
       emailId,
       phoneNumber,
+      dateOfBirth,
       password,
       confirmPassword,
       playerType,
@@ -137,6 +142,19 @@ export const SignUp = () => {
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
                   disabled={phoneNumber1 !== null}
+                />
+              </div>
+              <div className="form-group input-group">
+                <div className="input-group-prepend">
+                  <span className="input-group-text"> <i class="fa fa-calendar" aria-hidden="true"></i> </span>
+                </div>
+                <input
+                 type="date"
+                  placeholder="Phone Number"
+                  name="dateOfBirth"
+                  className="form-control"
+                  value={dateOfBirth}
+                  onChange={(e) => setdateOfBirth(e.target.value)}
                 />
               </div>
               {phoneNumber1 ? null : (
