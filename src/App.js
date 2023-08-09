@@ -7,6 +7,7 @@ import UserDashboard from './component/UserDashboard';
 import Header from './component/Header';
 import Places from './component/Places';
 import { CreateMatch } from './component/CreateMatch';
+import { PlayerData } from './component/PlayerData';
 
 function App() {
   const phoneNumber=sessionStorage.getItem('loggeduser');
@@ -22,6 +23,7 @@ function App() {
           <Route path="/userpage" element={<UserDashboard />} />
           <Route path="/places" element={<Places />} />
           <Route path="/creatematch" element={<CreateMatch />} />
+          <Route path="/playerdata" element={<PlayerData/>}/>
         </Routes>
   
     </div>

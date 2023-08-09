@@ -1,0 +1,26 @@
+
+.card-player {
+   
+    height: 100vh; /* Adjust this to your desired height */
+    margin: 30px; /* Add a gap around the card */
+  
+    /* Additional styling for the card */
+    background-color: #c4aaaa;
+    border: 1px solid #ccc;
+    background-image: url();
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  }
+  .card-header-player {
+    background-color: #e0d6d6;
+    border-bottom: none;
+    padding: 1rem;
+    border-radius: 8px 8px 0 0;
+  }
+  .row{
+    text-align: left;
+    margin-left: 20px;
+    display: flex;
+    justify-content: space-between;
+    padding: 20px;
+  }
