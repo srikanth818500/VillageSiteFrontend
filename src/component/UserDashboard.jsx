@@ -11,6 +11,7 @@ function UserDashboard() {
     if (phoneNumber) {
       axios.post(`http://localhost:8080/api/v1/getDetails/${phoneNumber}`)
         .then(response => {
+          console.log(response.data);
           setUserDetails(response.data); // Store the user details in state
         })
         .catch(error => {

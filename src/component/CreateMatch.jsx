@@ -2,20 +2,47 @@ import React, { useState } from 'react';
 import { Nav, NavDropdown } from 'react-bootstrap';
 import './CreateMatch.css';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import { useEffect } from 'react';
+import axios from 'axios';
+
+
 export function CreateMatch() {
     const [teamName, setTeamName] = useState('');
     const [players, setPlayers] = useState([]);
     const [teamName2, setTeamName2] = useState('');  
     const [players2, setPlayers2] = useState([]);
+    const [selectedPlayers, setSelectedPlayers] = useState([]);
     const [activeTab, setActiveTab] = useState('/team1');
+    const [selectedPlayer, setSelectedPlayer] = useState('');
+    const allPlayers = [
+        'Player 1',
+        'Player 2',
+        'Player 3',
+        'Player 4',
+        'Player 5',
+        'Player 6',
+        'Player 7',
+        'Player 8',
+        'Player 9',
+        'Player 10',
+        'Player 12',
+        'Player 13',
+      
+    ];
+    useEffect(() => {
+        // Simulate fetching player names from the database
+        const fetchedPlayers = ['Player A', 'Player B', 'Player C'];
+        //setPlayers2(fetchedPlayers);
+    }, []);
     const handleAddPlayer = () => {
         if (players.length < 11) {
             setPlayers([...players, '']);
         }
     };
     const handleAddPlayer2 = () => {
-        if (players2.length < 11) {
-            setPlayers2([...players2, '']);
+        if (players.length < 11) {
+            setPlayers([...players, '']);
         }
     };
     const handlePlayerNameChange = (index, playerName) => {
@@ -24,12 +51,61 @@ export function CreateMatch() {
         setPlayers(updatedPlayers);
     };
     const handlePlayerNameChange2 = (index, playerName) => {
-        const updatedPlayers = [...players2];
+        const updatedPlayers = [...players];
         updatedPlayers[index] = playerName;
-        setPlayers2(updatedPlayers);
+        setPlayers(updatedPlayers);
     };
      const handleTabChange = (tab) => {
         setActiveTab(tab);
+    };
+    const handlePlayerChange = (event) => {
+        setSelectedPlayer(event.target.value);
+      };
+      const handlePlayerSelection = () => {
+        
+        if (players.includes(selectedPlayer)) {
+            alert("Player already selected");
+        }
+        else if (selectedPlayer && players.length > 10) {
+           alert("Team is full");
+        }
+       else if (selectedPlayer && players.length <= 10) {
+            setPlayers([...players, selectedPlayer]);
+            setSelectedPlayer(''); 
+        }
+        
+    }; 
+    const handlePlayerSelection2 = () => {
+        
+        if (players2.includes(selectedPlayer)) {
+            alert("Player already selected");
+        }
+        else if (selectedPlayer && players2.length > 10) {
+           alert("Team is full");
+        }
+       else if (selectedPlayer && players.length <= 10) {
+            setPlayers2([...players2, selectedPlayer]);
+            setSelectedPlayer(''); 
+        }
+        
+    };  
+    const handlePlayerRemoval = () => {
+        const updatedPlayers = players.filter(player => player !== selectedPlayer);
+        setPlayers(updatedPlayers);
+    };
+    
+    const handlePlayerRemoval2 = () => {
+        const updatedPlayers = players2.filter(player => player !== selectedPlayer);
+        setPlayers2(updatedPlayers);
+    };
+    const SubmitTeams = (e) => {
+        e.preventDefault();
+        axios.post('http://localhost:8080/api/v1/', { teamName, players, teamName2, players2 })
+        const data = {
+            teamName,
+            players,
+        };
+        console.log(data);
     };
     return (
         <div className="card-match">
@@ -63,20 +139,19 @@ export function CreateMatch() {
                         <div className="row">
                             <div className="col-6">
                                 <h3>Players:</h3>
-                                {players.map((playerName, index) => (
-                                    <div key={index}>
-                                        <input
-                                            type="text"
-                                            value={playerName}
-                                            onChange={(e) =>
-                                                handlePlayerNameChange(index, e.target.value)
-                                            }
-                                            placeholder={`Player ${index + 1}`}
-                                        />
-                                    </div>
-                                ))}
-                                <button type="button" onClick={handleAddPlayer}>
+                                <select value={selectedPlayer} onChange={handlePlayerChange}>
+                                    <option value="">Select a player</option>
+                                    {allPlayers.map((playerName, index) => (
+                                        <option key={index} value={playerName}>
+                                            {playerName}
+                                        </option>
+                                    ))}
+                                </select>     <br/><br/>                    
+                                <button className="btn btn-success" type="button" onClick={handlePlayerSelection}>
                                     Add Player
+                                </button>
+                                <button  className="btn btn-danger" type="button" onClick={handlePlayerRemoval}>
+                                    Remove Player
                                 </button>
                             </div>
                         </div>
@@ -97,21 +172,22 @@ export function CreateMatch() {
                     <div className="row">
                         <div className="col-6">
                             <h3>Players:</h3>
-                            {players2.map((playerName2, index) => (
-                                <div key={index}>
-                                    <input
-                                        type="text"
-                                        value={playerName2}
-                                        onChange={(e) =>
-                                            handlePlayerNameChange2(index, e.target.value)
-                                        }
-                                        placeholder={`Player ${index + 1}`}
-                                    />
-                                </div>
-                            ))}
-                            <button type="button" onClick={handleAddPlayer2}>
-                                Add Player
-                            </button>
+                            
+                            <select value={selectedPlayer} onChange={handlePlayerChange}>
+                                    <option value="">Select a player</option>
+                                    {allPlayers.map((playerName, index) => (
+                                        <option key={index} value={playerName}>
+                                            {playerName}
+                                        </option>
+                                    ))}
+                                </select>   <br/><br/>     
+                                               
+                                <button className="btn btn-success" type="button" onClick={handlePlayerSelection2}>
+                                    Add Player
+                                </button>
+                                <button className="btn btn-danger" type="button" onClick={handlePlayerRemoval2}>
+                                    Remove Player
+                                </button>
                         </div>
                     </div>
                 </div>
@@ -132,11 +208,11 @@ export function CreateMatch() {
                         )}
                         {activeTab === '/team2' && (
                             <div className="team-details">
-                                <h3>Team2 Name: {teamName2}</h3>
-                                <h3>Players:</h3>
+                                <h3> {teamName2}</h3>
+                                <h3 style={{color:"red"}}>Players:</h3>
                                 <ul>
                                     {players2.map((playerName, index) => (
-                                        <li key={index}>{playerName}</li>
+                                        <li key={index}><h4>{playerName}</h4></li>
                                     ))}
                                 </ul>
                             </div>
@@ -144,8 +220,11 @@ export function CreateMatch() {
                     </div>
                 </div>
              </div>
+             {players2.length > 10 && players.length > 10 && (
+              <button className="btn btn-success" type="button" onClick={SubmitTeams}>
+                   Submit
+                 </button>
+)}
         </div> 
-   
-        
     );
 }
