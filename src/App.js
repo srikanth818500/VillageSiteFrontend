@@ -8,6 +8,7 @@ import Header from './component/Header';
 import Places from './component/Places';
 import { CreateMatch } from './component/CreateMatch';
 import { PlayerData } from './component/PlayerData';
+import { MatchStart } from './component/MatchStart';
 
 function App() {
   const phoneNumber=sessionStorage.getItem('loggeduser');
@@ -24,6 +25,7 @@ function App() {
           <Route path="/places" element={<Places />} />
           <Route path="/creatematch" element={<CreateMatch />} />
           <Route path="/playerdata" element={<PlayerData/>}/>
+          <Route path="/matchstart" element={<MatchStart/>}/>
         </Routes>
   
     </div>
