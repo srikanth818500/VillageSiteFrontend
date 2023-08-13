@@ -24,8 +24,7 @@ function UserDashboard() {
 
   if (userDetails && userDetails.length > 0) {
     const user = userDetails[0]; // Access the first user object in the array
-    const birth=birthday[0];
-    console.log(";;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;",birth)
+   
     return (
       <div className="split-screen">
         <div className="left-half"></div>
@@ -35,8 +34,8 @@ function UserDashboard() {
             <p>First Name: {user.firstname}</p>
             <p>Last Name: {user.last_name}</p>
             <p>Email: {user.email_id}</p>
-            <p>birthday:{birth.firstname}</p>
-            <p>{user.last_name}</p>
+           {/* <p>birthday:{birth.firstname}</p> */}
+            {/* <p>{user.last_name}</p> */}
           </form>
         </div>
       </div>
