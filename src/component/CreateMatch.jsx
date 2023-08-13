@@ -15,6 +15,8 @@ export function CreateMatch() {
     const [selectedPlayers, setSelectedPlayers] = useState([]);
     const [activeTab, setActiveTab] = useState('/team1');
     const [selectedPlayer, setSelectedPlayer] = useState('');
+    const [playerList, setPlayerList]=useState([]);
+    const [selectPlayerPhonenumber,setselectPlayerPhonenumber]=useState([])
     const allPlayers = [
         'Player 1',
         'Player 2',
@@ -31,8 +33,12 @@ export function CreateMatch() {
       
     ];
     useEffect(() => {
-        // Simulate fetching player names from the database
-        const fetchedPlayers = ['Player A', 'Player B', 'Player C'];
+        axios.get('http://localhost:8080/api/v1/getPlayerList')
+        .then((response=>{
+            console.log("ooooooooooooooooooooooooooooooooooo",response);
+            setPlayerList(response.data)
+        })
+        )
         //setPlayers2(fetchedPlayers);
     }, []);
     const handleAddPlayer = () => {
@@ -61,8 +67,8 @@ export function CreateMatch() {
     const handlePlayerChange = (event) => {
         setSelectedPlayer(event.target.value);
       };
-      const handlePlayerSelection = () => {
-        
+    const handlePlayerSelection = () => {
+        const [phone_number, firstname] = selectedPlayer.split('-');      
         if (players.includes(selectedPlayer)) {
             alert("Player already selected");
         }
@@ -70,13 +76,15 @@ export function CreateMatch() {
            alert("Team is full");
         }
        else if (selectedPlayer && players.length <= 10) {
-            setPlayers([...players, selectedPlayer]);
+            setPlayers([...players, firstname]);
+            setselectPlayerPhonenumber([...selectPlayerPhonenumber,phone_number])
             setSelectedPlayer(''); 
         }
         
     }; 
+    
     const handlePlayerSelection2 = () => {
-        
+        alert(selectedPlayer);
         if (players2.includes(selectedPlayer)) {
             alert("Player already selected");
         }
@@ -90,7 +98,11 @@ export function CreateMatch() {
         
     };  
     const handlePlayerRemoval = () => {
-        const updatedPlayers = players.filter(player => player !== selectedPlayer);
+        const [phone_number, firstname] = selectedPlayer.split('-');  
+        const updatedPlayers = players.filter(player => player !== firstname);
+        const updatedPhoneNumber=selectPlayerPhonenumber.filter(players=>players!==phone_number);
+        alert(updatedPhoneNumber);
+        setselectPlayerPhonenumber(updatedPhoneNumber);
         setPlayers(updatedPlayers);
     };
     
@@ -98,15 +110,20 @@ export function CreateMatch() {
         const updatedPlayers = players2.filter(player => player !== selectedPlayer);
         setPlayers2(updatedPlayers);
     };
-    const SubmitTeams = (e) => {
-        e.preventDefault();
-        axios.post('http://localhost:8080/api/v1/', { teamName, players, teamName2, players2 })
-        const data = {
-            teamName,
-            players,
-        };
-        console.log(data);
+
+    const SubmitTeams = () => {
+      const selectPlayerPhonenumber1 =selectPlayerPhonenumber;
+      const phoneNumber = sessionStorage.getItem('loggeduser');
+
+      axios.post(`http://localhost:8080/api/v1/saveTeam`, { selectedPlayers: selectPlayerPhonenumber1,teamName,phoneNumber})
+        .then((response) => {
+          console.log(response);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     };
+    
     return (
         <div className="card-match">
             <h1 style={{ textAlign: 'left' }}>Create Match</h1>
@@ -137,22 +154,31 @@ export function CreateMatch() {
                             </div>
                         </div>
                         <div className="row">
+
                             <div className="col-6">
                                 <h3>Players:</h3>
                                 <select value={selectedPlayer} onChange={handlePlayerChange}>
-                                    <option value="">Select a player</option>
-                                    {allPlayers.map((playerName, index) => (
-                                        <option key={index} value={playerName}>
-                                            {playerName}
-                                        </option>
-                                    ))}
-                                </select>     <br/><br/>                    
+    <option value="">Select a player</option>
+    {playerList.map((player, index) => (
+        <option key={index} 
+                value={`${player.phone_number}-${player.firstname}-${player.last_name}`}>
+            {player.firstname} {player.last_name} ({player.phone_number})
+        </option>
+    ))}
+</select>
+  
+                                  <br/><br/>                    
                                 <button className="btn btn-success" type="button" onClick={handlePlayerSelection}>
                                     Add Player
                                 </button>
                                 <button  className="btn btn-danger" type="button" onClick={handlePlayerRemoval}>
                                     Remove Player
                                 </button>
+                                {players.length > 10 && (
+              <button className="btn btn-success" type="button" onClick={SubmitTeams}>
+                   Submit
+                 </button>
+)}
                             </div>
                         </div>
                     </div>
@@ -220,11 +246,7 @@ export function CreateMatch() {
                     </div>
                 </div>
              </div>
-             {players2.length > 10 && players.length > 10 && (
-              <button className="btn btn-success" type="button" onClick={SubmitTeams}>
-                   Submit
-                 </button>
-)}
+
         </div> 
     );
 }
