@@ -16,3 +16,28 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   }
+  /* css regarding modual */
+  .modal {
+    /* ... (your modal styling) */
+    /* Make sure the modal has a position other than static */
+    position: fixed; /* or absolute */
+  
+    /* ... (other modal styles) */
+  }
+  
+  .modal-content {
+    /* ... (your modal content styling) */
+    position: relative;
+  }
+  
+  .close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    font-size: 30px;
+    padding: 15px;
+    cursor: pointer;
+    /* ... (other close button styles) */
+  }
+  
+  

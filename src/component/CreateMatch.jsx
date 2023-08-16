@@ -17,6 +17,7 @@ export function CreateMatch() {
     const [selectedPlayer, setSelectedPlayer] = useState('');
     const [playerList, setPlayerList]=useState([]);
     const [selectPlayerPhonenumber,setselectPlayerPhonenumber]=useState([])
+    const [playerDetails, setPlayerDetails] = useState(null);
     const allPlayers = [
         'Player 1',
         'Player 2',
@@ -32,6 +33,13 @@ export function CreateMatch() {
         'Player 13',
       
     ];
+    const samplePlayerDetails = {
+        name: 'John Doe',
+        age: 25,
+        position: 'Forward',
+        nationality: 'USA',
+        // Add more properties as needed
+      };
     useEffect(() => {
         axios.get('http://localhost:8080/api/v1/getPlayerList')
         .then((response=>{
@@ -67,8 +75,7 @@ export function CreateMatch() {
     const handlePlayerChange = (event) => {
         setSelectedPlayer(event.target.value);
       };
-    const handlePlayerSelection = () => {
-        const [phone_number, firstname] = selectedPlayer.split('-');      
+    const handlePlayerSelection = () => {    
         if (players.includes(selectedPlayer)) {
             alert("Player already selected");
         }
@@ -76,8 +83,7 @@ export function CreateMatch() {
            alert("Team is full");
         }
        else if (selectedPlayer && players.length <= 10) {
-            setPlayers([...players, firstname]);
-            setselectPlayerPhonenumber([...selectPlayerPhonenumber,phone_number])
+            setPlayers([...players, selectedPlayer]);
             setSelectedPlayer(''); 
         }
         
@@ -98,11 +104,7 @@ export function CreateMatch() {
         
     };  
     const handlePlayerRemoval = () => {
-        const [phone_number, firstname] = selectedPlayer.split('-');  
-        const updatedPlayers = players.filter(player => player !== firstname);
-        const updatedPhoneNumber=selectPlayerPhonenumber.filter(players=>players!==phone_number);
-        alert(updatedPhoneNumber);
-        setselectPlayerPhonenumber(updatedPhoneNumber);
+        const updatedPlayers=players.filter(players=>players!==selectedPlayer);
         setPlayers(updatedPlayers);
     };
     
@@ -115,7 +117,7 @@ export function CreateMatch() {
       const selectPlayerPhonenumber1 =selectPlayerPhonenumber;
       const phoneNumber = sessionStorage.getItem('loggeduser');
 
-      axios.post(`http://localhost:8080/api/v1/saveTeam`, { selectedPlayers: selectPlayerPhonenumber1,teamName,phoneNumber})
+      axios.post(`http://localhost:8080/api/v1/saveTeam`, { selectedPlayers: players,teamName,phoneNumber})
         .then((response) => {
           console.log(response);
         })
@@ -123,7 +125,26 @@ export function CreateMatch() {
           console.error(error);
         });
     };
+    const handlePlayerClick = async (playerName) => {
+        try {
+        //  const response = await fetch(`/api/getPlayerDetails?player=${playerName}`);
+          //const data = await response.json();
+          
+          setPlayerDetails(samplePlayerDetails);
+          openPlayerModal();
+        } catch (error) {
+          console.error('Error fetching player details:', error);
+        }
+      };
+      const openPlayerModal = () => {
+        const modal = document.getElementById('playerModal');
+        modal.style.display = 'block';
+      };
     
+      const closePlayerModal = () => {
+        const modal = document.getElementById('playerModal');
+        modal.style.display = 'none';
+      };
     return (
         <div className="card-match">
             <h1 style={{ textAlign: 'left' }}>Create Match</h1>
@@ -158,14 +179,14 @@ export function CreateMatch() {
                             <div className="col-6">
                                 <h3>Players:</h3>
                                 <select value={selectedPlayer} onChange={handlePlayerChange}>
-    <option value="">Select a player</option>
-    {playerList.map((player, index) => (
-        <option key={index} 
-                value={`${player.phone_number}-${player.firstname}-${player.last_name}`}>
-            {player.firstname} {player.last_name} ({player.phone_number})
-        </option>
-    ))}
-</select>
+                                    <option value="">Select a player</option>
+                                    {playerList.map((player, index) => (
+                                        <option key={index} 
+                                                value={`${player.firstname}`}>
+                                            {player.firstname} 
+                                        </option>
+                                    ))}
+                                </select>
   
                                   <br/><br/>                    
                                 <button className="btn btn-success" type="button" onClick={handlePlayerSelection}>
@@ -227,7 +248,9 @@ export function CreateMatch() {
                                 <h3 style={{color:"red"}}>Players:</h3>
                                 <ul>
                                     {players.map((playerName, index) => (
-                                       <li key={index}><h4>{playerName}</h4></li>
+                                           <li key={index}>
+                                           <h4 onClick={() => handlePlayerClick(playerName)}>{playerName}</h4>
+                                         </li>
                                     ))}
                                 </ul>
                             </div>
@@ -245,6 +268,108 @@ export function CreateMatch() {
                         )}
                     </div>
                 </div>
+                {playerDetails && (
+        <div id="playerModal" className="modal">
+          <div className="modal-content">
+          <button type="button" className="close" onClick={closePlayerModal}>
+          &times;
+        </button>
+            <div className="card-player">
+            <div className="card-header-player">
+            <div className="col-10">
+                <h1>Player Data</h1>
+                </div>
+            </div>
+        <div className="row">
+            <div className="col-2">
+                <h3>Name :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+            <div className="col-2">
+                <h3>Player Type :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-2">
+                <h3>Total Runs :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+            <div className="col-2">
+                <h3>Heighest Runs :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-2">
+                <h3>Bowling Average :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+            <div className="col-2">
+                <h3>Bat Average  :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-2">
+                <h3>No Of 50s:</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+            <div className="col-2">
+                <h3>No Of 3 wik  :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-2">
+                <h3>No Of 4s:</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+            <div className="col-2">
+                <h3>No Of 6s  :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+        </div>
+        <div className="row">
+            <div className="col-2">
+                <h3>Best-W/R:</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+            <div className="col-2">
+                <h3>  :</h3>
+            </div>
+            <div className="col-4">
+                <h3></h3>
+            </div>
+        </div>
+        
+        </div>
+        
+          </div>
+        </div>
+      )}
              </div>
 
         </div> 
