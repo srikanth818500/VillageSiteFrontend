@@ -24,7 +24,6 @@ export const SignUp = () => {
     axios.post(`http://localhost:8080/api/v1/getDetails/${phoneNumber1}`)
       .then(response => {
         const user = response.data[0];
-        console.log(user);
         setFirstName(user.firstname || '');
         setLastName(user.last_name || '');
         setEmail(user.email_id || '');
@@ -40,7 +39,19 @@ export const SignUp = () => {
   }
 }, [phoneNumber1]);
 
- 
+ const checkUserNameExistOrNot=()=>{
+       const username=firstName;
+       axios.post(`http://localhost:8080/api/v1/getuser/${username}`)
+       .then((response)=>{
+        console.log(response)
+        setFirstName(username);
+        setError("")
+       })
+       .catch(error => {
+        console.error(error);
+        setError("username allready exists");
+      });
+ }
  
   const UpdateDate = async (e) => {
     e.preventDefault();
@@ -100,11 +111,12 @@ export const SignUp = () => {
                   <span className="input-group-text"> <i className="fa fa-users"></i></span>
                 </div>
                 <input
-                  placeholder="First Name"
+                  placeholder="Username"
                   name="firstName"
                   className="form-control"
                   value={firstName}
                   onChange={(e) => setFirstName(e.target.value)}
+                  onBlur={checkUserNameExistOrNot}
                 />
               </div>
               <div className="form-group input-group">
@@ -112,7 +124,7 @@ export const SignUp = () => {
                   <span className="input-group-text"> <i className="fa fa-users"></i> </span>
                 </div>
                 <input
-                  placeholder="Last Name"
+                  placeholder="Full Name"
                   name="lastName"
                   className="form-control"
                   value={lastName}
