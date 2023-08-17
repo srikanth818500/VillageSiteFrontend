@@ -52,7 +52,19 @@ export const SignUp = () => {
         setError("username allready exists");
       });
  }
- 
+ const checkPhoneNumberExistOrNot=()=>{
+  const phone=phoneNumber;
+  axios.post(`http://localhost:8080/api/v1/checkPhoneNumber/${phone}`)
+  .then((response)=>{
+   console.log(response)
+   setError("PhoneNumber allready exists")
+  })
+  .catch(error => {
+   console.error(error);
+   setPhoneNumber(phone);
+   setError("");
+ });
+}
   const UpdateDate = async (e) => {
     e.preventDefault();
     const data = {
@@ -153,6 +165,7 @@ export const SignUp = () => {
                   className="form-control"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
+                  onBlur={checkPhoneNumberExistOrNot}
                   disabled={phoneNumber1 !== null}
                 />
               </div>

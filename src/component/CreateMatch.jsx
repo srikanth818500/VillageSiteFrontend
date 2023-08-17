@@ -18,6 +18,8 @@ export function CreateMatch() {
     const [playerList, setPlayerList]=useState([]);
     const [selectPlayerPhonenumber,setselectPlayerPhonenumber]=useState([])
     const [playerDetails, setPlayerDetails] = useState(null);
+    const [error,setError]=useState('');
+    const [hoveredPlayer, setHoveredPlayer] = useState(null);
     const allPlayers = [
         'Player 1',
         'Player 2',
@@ -145,6 +147,19 @@ export function CreateMatch() {
         const modal = document.getElementById('playerModal');
         modal.style.display = 'none';
       };
+      const checkTeamNameExistOrNot=()=>{
+        const team=teamName;
+        axios.post(`http://localhost:8080/api/v1/checkTeamName/${team}`)
+        .then((response)=>{
+         console.log(response)
+         setTeamName(teamName)
+         setError("")
+        })
+        .catch(error => {
+         console.error(error);
+         setError("TeamName allready exists");
+       });
+      }
     return (
         <div className="card-match">
             <h1 style={{ textAlign: 'left' }}>Create Match</h1>
@@ -162,6 +177,7 @@ export function CreateMatch() {
             <div className="row">
             <div className="col-6">
             <div className="tab-content">
+            {error && <div style={{ color: 'red' }}><h3>{error}</h3></div>}
                <div className={activeTab === '/team1' ? 'tab-pane fade show active' : 'tab-pane fade'} id="/team1">
                         
                         <div className="row">
@@ -171,6 +187,7 @@ export function CreateMatch() {
                                     type="text"
                                     value={teamName}
                                     onChange={(e) => setTeamName(e.target.value)}
+                                    onBlur={checkTeamNameExistOrNot}
                                 />
                             </div>
                         </div>
@@ -248,9 +265,17 @@ export function CreateMatch() {
                                 <h3 style={{color:"red"}}>Players:</h3>
                                 <ul>
                                     {players.map((playerName, index) => (
-                                           <li key={index}>
-                                           <h4 onClick={() => handlePlayerClick(playerName)}>{playerName}</h4>
+
+                                            <li key={index}                                
+                                         onMouseEnter={() => setHoveredPlayer(playerName)}
+                                        onMouseLeave={() => setHoveredPlayer(null)}
+                                        >
+                                           <h4 onClick={() => handlePlayerClick(playerName)} style={{
+                                            cursor: 'pointer',
+                                            color: hoveredPlayer === playerName ? 'blue' : 'black', 
+                                          }}>{playerName}</h4>
                                          </li>
+                                         
                                     ))}
                                 </ul>
                             </div>
