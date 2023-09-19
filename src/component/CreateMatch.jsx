@@ -20,6 +20,10 @@ export function CreateMatch() {
     const [playerDetails, setPlayerDetails] = useState(null);
     const [error,setError]=useState('');
     const [hoveredPlayer, setHoveredPlayer] = useState(null);
+    const [teamlist, setTeamsList]=useState([]);
+    const number = sessionStorage.getItem('loggeduser');
+    const [phoneNumber,setPhoneNumber]=useState('')
+    const [teamplayerlist,setTeamPlayerList]=useState([]);
     const allPlayers = [
         'Player 1',
         'Player 2',
@@ -42,15 +46,29 @@ export function CreateMatch() {
         nationality: 'USA',
         // Add more properties as needed
       };
-    useEffect(() => {
+      useEffect(() => {
         axios.get('http://localhost:8080/api/v1/getPlayerList')
-        .then((response=>{
-            console.log("ooooooooooooooooooooooooooooooooooo",response);
-            setPlayerList(response.data)
+        .then(response => {
+            console.log("Player List Response:", response);
+            setPlayerList(response.data);
+    
+            // Assuming `number` is defined somewhere above
+            const phone = number;
+            //issue with team name please check into this 
+            axios.post(`http://localhost:8080/api/v1/getTeamsList/${phone}`)
+            .then(response2 => {
+                setTeamsList(response2.data);
+                console.log("Teams List:", response2.data);
+            })
+            .catch(error2 => {
+                console.log("Error fetching teams:", error2);
+            });
         })
-        )
-        //setPlayers2(fetchedPlayers);
+        .catch(error => {
+            console.log("Error fetching players:", error);
+        }); 
     }, []);
+    
     const handleAddPlayer = () => {
         if (players.length < 11) {
             setPlayers([...players, '']);
@@ -122,6 +140,9 @@ export function CreateMatch() {
       axios.post(`http://localhost:8080/api/v1/saveTeam`, { selectedPlayers: players,teamName,phoneNumber})
         .then((response) => {
           console.log(response);
+          setTeamName(null);
+          setPlayers([]);
+          alert("team registered sucessfully.")
         })
         .catch(error => {
           console.error(error);
@@ -158,6 +179,17 @@ export function CreateMatch() {
         .catch(error => {
          console.error(error);
          setError("TeamName allready exists");
+       });
+      }
+      const getListOfPlayers= async(playerName)=>{
+        setTeamPlayerList([]);
+        axios.post(`http://localhost:8080/api/v1/getPlayerList/${playerName}`)
+        .then((response)=>{
+         setTeamPlayerList(response.data);
+        })
+        .catch(error => {
+         console.error(error);
+         alert("please click again")
        });
       }
     return (
@@ -225,15 +257,26 @@ export function CreateMatch() {
                 <div className={activeTab === '/team2' ? 'tab-pane fade show active' : 'tab-pane fade'} id="/team2">
                     <div className="row">
                         <div className="col-6">
-                            <h3>Team2 Name:</h3>
-                            <input
-                                type="text"
-                                value={teamName2}
-                                onChange={(e) => setTeamName2(e.target.value)}
-                            />
+                            <h3>Teams List:</h3>
+                            <ul>
+                                    {teamlist.map((playerName, index) => (
+
+                                            <li key={index}                                
+                                         onMouseEnter={() => setHoveredPlayer(playerName)}
+                                        onMouseLeave={() => setHoveredPlayer(null)}
+                                        >
+                                           <h4 onClick={() => getListOfPlayers(playerName)} style={{
+                                            cursor: 'pointer',
+                                            color: hoveredPlayer === playerName ? 'blue' : 'black', 
+
+                                          }}>{playerName}</h4>
+                                         </li>
+                                         
+                                    ))}
+                                </ul>
                         </div>
                     </div>
-                    <div className="row">
+                    {/* <div className="row">
                         <div className="col-6">
                             <h3>Players:</h3>
                             
@@ -252,8 +295,8 @@ export function CreateMatch() {
                                 <button className="btn btn-danger" type="button" onClick={handlePlayerRemoval2}>
                                     Remove Player
                                 </button>
-                        </div>
-                    </div>
+                        </div> 
+                    </div>*/}
                 </div>
             </div>  
               <div className="col-6">
@@ -285,9 +328,17 @@ export function CreateMatch() {
                                 <h3> {teamName2}</h3>
                                 <h3 style={{color:"red"}}>Players:</h3>
                                 <ul>
-                                    {players2.map((playerName, index) => (
-                                        <li key={index}><h4>{playerName}</h4></li>
-                                    ))}
+                                {teamplayerlist === null ? (
+                                    <p>Loading...</p>
+                                    ) : (
+                                    <ul>
+                                        {teamplayerlist.map((playerName, index) => (
+                                        <li key={index}>
+                                            <h4>{playerName}</h4>
+                                        </li>
+                                        ))}
+                                    </ul>
+                                    )}
                                 </ul>
                             </div>
                         )}

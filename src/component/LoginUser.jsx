@@ -11,14 +11,58 @@ function LoginUser() {
   const [phoneNumber, setPhoneNumber] = useState('');
   const [password, setPassword] = useState('');
   const [error,setError]=useState('');
+  const [captcha, setCaptcha] = useState('');
+  const [entercaptcha, setEntercaptcha] = useState('');
   const navigate = useNavigate();
+  const [counter, setCounter] = useState(30);
   sessionStorage.clear('loggeduser');
+   const generateCaptcha = () => {
+    var alpha="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+    var a=alpha[Math.floor(Math.random()*alpha.length)];
+    var b=alpha[Math.floor(Math.random()*alpha.length)];
+    var c=alpha[Math.floor(Math.random()*alpha.length)];
+    var d=alpha[Math.floor(Math.random()*alpha.length)];
+
+    var code=a+b+c+d;
+    setCaptcha(code);
+  };
+  useEffect(() => {
+    generateCaptcha();
+    // starttime();
+  }, []);
+ 
+ 
+  
+  
 
  
+  React.useEffect(() => {
+    const timer =
+      counter > 0 && setInterval(() => setCounter(counter - 1), 1000);
+      if(counter===0){
+        setCounter(30);
+        generateCaptcha();
+      }
+    return () => clearInterval(timer);
+    
+  }, [counter])
+
+
+  const handlePhoneNumberInput = (e) => {
+    const cleanedValue = e.target.value.replace(/[^0-9]/g, ''); 
+    setPhoneNumber(cleanedValue.slice(0, 10)); 
+  };
+  const regenerate=()=>{
+    generateCaptcha();
+    setCounter(30);
+  }
   const submithandler = (e) => {
     e.preventDefault();
     setError('');
-    
+    if(entercaptcha!==captcha){ 
+      setError('Captcha is not matching');
+      return;
+    }
     const data = {
       phoneNumber,
       password,
@@ -39,14 +83,14 @@ function LoginUser() {
     <div className="split-screen">
       <div className="left-half">
         {/* Image */}
-        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-login-form/img1.webp" alt="Background" />
+        <img src="" alt="Background" />
       </div>
       <div className="right-half">
         {/* Login Form */}
         <div className="container">
           <div className="card bg-light">
             <article className="card-body mx-auto" style={{ maxWidth: '400px' }}>
-            {error && <div style={{ color: 'red' }}><h3>{error}</h3></div>}
+            {error && <div style={{ color: 'red' }}><h4>{error}</h4></div>}
               <div className="d-flex align-items-center mb-3 pb-1">
                 <FontAwesomeIcon icon={faCubes} className="logo-icon fa-2x me-3" />
                 <span className="h1 fw-bold mb-0">LOGIN</span>
@@ -59,9 +103,10 @@ function LoginUser() {
                   <input
                     placeholder="Phonenumber"
                     name="phoneNumber"
-                    className="form-control-1"
+                    className="form-control"
                     value={phoneNumber}
-                    onChange={(e) => setPhoneNumber(e.target.value)}
+                    maxLength={10}
+                    onChange={handlePhoneNumberInput}
                   />
                 </div>
 
@@ -72,15 +117,21 @@ function LoginUser() {
                   <input
                     placeholder="password"
                     name="password"
-                    className="form-control-1"
+                    className="form-control"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                   />
                 </div>
-                <div className="pt-1 mb-4">
-                  <button className="btn btn-login btn-lg btn-block" onClick={submithandler} type="button">Login</button>
+                <div>
+                <p id="mainCaptcha" style={{color:'green'}}><h3>{captcha}</h3></p>
+                <p id="countdown" className="countdown" style={{color:'red'}}>{counter}</p>
+                <input  className="form-control-1" type="text" id="chapthaEntered" placeholder="Enter Captha" maxLength={4} onChange={(e)=>setEntercaptcha(e.target.value)}/>
+                <i className="fa fa-refresh" id="refresh" onClick={regenerate} ></i>
                 </div>
-
+                <div className="pt-1 mb-4">
+                  <button className="btn btn-success" onClick={submithandler} type="submit">Login</button>
+                </div>
+                
                 <a className="small text-muted" href="#!">Forgot password?</a>
                 <p className="mb-5 pb-lg-2 login-form">
                   Don't have an account? <a href="/signup" className="login-form">Register here</a>
