@@ -12,6 +12,9 @@ export const MatchStart = () => {
   const [Batsman1, setBatsman1] = useState([]);
   const [Batsman2, setBatsman2] = useState([]);
   const [Bowler, setBowler] = useState([]);
+  const[overscore,setoverscore]=useState([]);
+  const [circle, setCircle] = useState(overscore);
+  const [currentIndex, setCurrentIndex] = useState(0);
   const [startmatch1, setstartmatch1] = useState(false);
   const[playingbatsamn,setplayingbatsman]=useState('');
   const[otherbatsamn,setotherbatsman]=useState('');
@@ -25,8 +28,11 @@ export const MatchStart = () => {
   const[balllive,setballlive]=useState(1);
   const[runsScored,setrunsscored]=useState('');
   const[scoreType,setscoreType]=useState('');
+  const [scoreList, setScoreList] = useState([]);
   const[outtype,setouttype]=useState('');
+  const[runs,setruns]=useState('');
   const location=useLocation();
+  const [overruns,setoverruns]=useState('');
   const idvalue=location.state?.firstValue || null;
   const submitMatch = () => {
     console.log(overs + "" + toss + "" + choose + "" + team1 + "" + team2);
@@ -78,6 +84,10 @@ export const MatchStart = () => {
     setplayingbatsman(e.target.value);
     
   })
+  const RunsScoredHandle=(e)=>{
+    setscoreType(e.target.value)
+    setrunsscored(0);
+  }
   const onchangebatsman2=((e)=>{
     if(playingbatsamn===(e.target.value)){
       alert("Both batsman must not be same")
@@ -88,12 +98,27 @@ export const MatchStart = () => {
   const onchangebowler=((e)=>{
     setplayingbowler(e.target.value);
      })   
-  const saveruns=()=>{
-  const runsScoredValue = parseInt(runsScored, 10);
+     
+  const saveruns=()=>{ 
+    alert(runsScored);
+    const runsScoredValue = isNaN(parseInt(runsScored, 10)) ? 0 : parseInt(runsScored, 10);
+    alert(runsScoredValue);
+  settotalscore(totalscore+runsScoredValue);
   const outtypeValue = parseInt(outtype, 10);
   const scoreTypevalue=parseInt(scoreType, 10);
+  const value = Batsman1score + runsScoredValue;
+  setoverscore([...overscore ,runsScoredValue]);
+  setBatsman1score(value);
+ 
     if((runsScoredValue===0||runsScoredValue===2||runsScoredValue===4||runsScoredValue===6||outtypeValue===7||outtypeValue===8||outtypeValue===9||outtypeValue===10)&&scoreTypevalue!=2){
       if(balllive===6){
+        if((runsScoredValue===0||runsScoredValue===2||runsScoredValue===4||runsScoredValue===6||outtypeValue===7||outtypeValue===8||outtypeValue===9||outtypeValue===10)&&scoreTypevalue!=2){
+          setplayingbatsman(otherbatsamn);
+          setotherbatsman(playingbatsamn);
+          setBatsman1score(Batsman2score);
+          setBatsman2score(value);
+        }
+
         setballlive(1);
         setoverslive(overslive+1);
        }else{
@@ -101,43 +126,50 @@ export const MatchStart = () => {
        }
     }else if((runsScoredValue===1||runsScoredValue===3||runsScoredValue===5)&&scoreTypevalue!=2){
       if(balllive===6){
+        if((runsScoredValue===0||runsScoredValue===2||runsScoredValue===4||runsScoredValue===6||outtypeValue===7||outtypeValue===8||outtypeValue===9||outtypeValue===10)&&scoreTypevalue!=2){
+          setplayingbatsman(otherbatsamn);
+          setotherbatsman(playingbatsamn);
+          setBatsman1score(Batsman2score);
+          setBatsman2score(value);
+        }
         setballlive(1);
         setoverslive(overslive+1);
-        setplayingbatsman(otherbatsamn);
-        setotherbatsman(playingbatsamn);
        }else{
         setballlive(balllive+1);
         setplayingbatsman(otherbatsamn);
         setotherbatsman(playingbatsamn);
+        setBatsman1score(Batsman2score);
+          setBatsman2score(value);
+
        }
     }else {
-      if((runsScoredValue===1||runsScoredValue===3||runsScoredValue===5)&&scoreTypevalue==2){
+      if((runsScoredValue===1||runsScoredValue===3||runsScoredValue===5)&&scoreTypevalue===2){
         setplayingbatsman(otherbatsamn);
         setotherbatsman(playingbatsamn);
-      }
-    }
-  }
-  const saveruns1=()=>{
-    if(runsScored==11){
-      setoverslive(overslive);
-      setballlive(balllive);
-      setBatsman1score(Batsman2score);
-      setBatsman2score(Batsman1score)
-    }else{
-      if(balllive===6){
-        setballlive(1);
-        setoverslive(overslive+1);
         setBatsman1score(Batsman2score);
-      setBatsman2score(Batsman1score)
-      }else{
-        setballlive(balllive+1);
+        setBatsman2score(value);
+
       }
     }
-  }   
+     if((outtypeValue===7||outtypeValue===8||outtypeValue===9||outtypeValue===10)&scoreTypevalue==1){
+       setbowlerwickets(bowlerwickets+1);
+       if(outtypeValue===7){
+         setoverscore([...overscore,'B']);
+       }else if(outtypeValue===8){
+        setoverscore([...overscore,'C'])
+       }else if(outtypeValue===9){
+        setoverscore([...overscore,'Ro'])
+       }else if(outtypeValue===10){
+        setoverscore([...overscore,'St'])
+       }
+  }
+  }
+  
   return (
     <>
       <br />
       <br />
+      <div className="match-data">
       <div className="row">
         <div className="col-md-2">
           <h3>Overs</h3>
@@ -199,7 +231,7 @@ export const MatchStart = () => {
           </button>
         </div>
       </div>
-       
+      </div>   
         <div className="card-match">
     <div className="card-header-match">
         <div className="col-10">
@@ -272,7 +304,7 @@ export const MatchStart = () => {
               </div>
               <div className="col-md-3">
                <label><h4>SCORE TYPE</h4> </label>
-                <select style={{color:"blue"}} value={scoreType} onChange={(e)=>setscoreType(e.target.value)}>
+                <select style={{color:"blue"}} value={scoreType} onChange={RunsScoredHandle}>
                     <option value="">Select ScoreType</option>
                     <option value="0">RUNS</option>
                     <option value="1">OUT</option>
@@ -316,7 +348,7 @@ export const MatchStart = () => {
             <h3>{playingbatsamn}<span style={{color:"red"}}>*</span>: <label style={{color:"blue"}}>{Batsman1score}</label> </h3>
           </div>
           <div className="col-md-6">
-            <h3>{playingbowler}: <label style={{color:"blue"}}>{bowlerwickets}</label> </h3> 
+            <h3>{playingbowler}: <label style={{color:"blue"}}>{bowlerwickets}/{totalscore}</label> </h3> 
           </div>
           </div>
           <div className="row">
@@ -328,7 +360,19 @@ export const MatchStart = () => {
           </div>
           </div>
         </div>
-    
+        <div className="circular-values-container">
+        <label>Over Score:</label>
+      {overscore.map((value, index) => (
+        <div
+          key={index}
+          className={`circular-value ${value === 'B' ||value === 'C' ||value === 'St'||value === 'Ro'  ? 'red-circle' : ''} ${
+            index === currentIndex ? 'active' : ''
+          }`}
+        >
+          {value}
+        </div>
+      ))}
+    </div>
     
         
     </div>

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, CardGroup } from "react-bootstrap";
 import CardHeader from "react-bootstrap/esm/CardHeader";
+import { useNavigate } from "react-router-dom";
 export const StartingMatch = () => {
 
     const [overs, setOvers] = useState(10);
@@ -14,12 +15,14 @@ export const StartingMatch = () => {
     const [Batsman2, setBatsman2] = useState("");
     const [matchdate, setmatchdate] = useState("");
     const [startmatch1, setstartmatch1] = useState(false);
+    const navigate = useNavigate();
     const phone = sessionStorage.getItem('loggeduser');
     useEffect(() => {
         axios.post(`http://localhost:8080/api/v1/getTeamsList/${phone}`)
             .then(response2 => {
                 setTeamsList(response2.data);
                 console.log("Teams List:", response2.data);
+
             })
             .catch(error2 => {
                 console.log("Error fetching teams:", error2);
@@ -27,7 +30,7 @@ export const StartingMatch = () => {
     }, [])
     const startmatch=()=>{
         const data={
-            phone:phone,
+            phoneNumber:phone,
             overs: overs,
             team1: team1,
             team2: team2,
@@ -41,8 +44,8 @@ export const StartingMatch = () => {
         }
         axios.post('http://localhost:8080/api/v1/startmatch', data)
         .then(response => {
-         alert(response);
-
+         console.log(response);
+         navigate('/matchesList');
         })
           .catch(error => {
             console.error(error);
@@ -120,8 +123,8 @@ export const StartingMatch = () => {
                                 disabled={submitted}
                             >
                                 <option value="">Select a player</option>
-                                <option value={`team1-${team1}`}>{team1}</option>
-                                <option value={`team2-${team2}`}>{team2}</option>
+                                <option value={`${team1}`}>{team1}</option>
+                                <option value={`${team2}`}>{team2}</option>
                             </select>
                         </div>
                         <div className="col-md-4">

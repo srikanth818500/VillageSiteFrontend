@@ -1,0 +1,30 @@
+.match-data{
+background-color: rgb(102, 105, 104);
+}
+
+.circular-values-container {
+    display: flex;
+    justify-content: left;
+    height: 100vh;
+  }
+  
+  .circular-value {
+    width: 30px;
+    height: 30px;
+    background-color: lightblue;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0 10px; /* Adjust the margin as needed */
+    font-size: 18px;
+  }
+  
+  .active {
+    background-color: lightgreen;
+  }
+  .red-circle {
+    background-color: red; /* Change the background color to red for the condition */
+    color: white; /* Change the text color to red for the condition */
+    font-weight: bold;
+  }
