@@ -83,7 +83,7 @@ function LoginUser() {
     <div className="split-screen">
       <div className="left-half">
         {/* Image */}
-        <img src="" alt="Background" />
+        <img src="https://media.gettyimages.com/id/1408256671/photo/england-v-india-1st-royal-london-series-one-day-international.jpg?s=1024x1024&w=gi&k=20&c=Io5KS6w8bbyH6PLAz1_UB5cB65onc7v-R7FUgS0OBCg=" alt="Background" />
       </div>
       <div className="right-half">
         {/* Login Form */}
