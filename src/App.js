@@ -11,6 +11,7 @@ import { PlayerData } from './component/PlayerData';
 import { MatchStart } from './component/MatchStart';
 import { StartingMatch } from './component/StartingMatch';
 import { ListTodayMatches } from './component/ListTodayMatches';
+import { Tspolice } from './component/Tsplioce';
 
 function App() {
   const phoneNumber=sessionStorage.getItem('loggeduser');
@@ -30,6 +31,8 @@ function App() {
           <Route path="/matchstart" element={<MatchStart/>}/>
           <Route path="/Startingmatch" element={<StartingMatch/>}/>
           <Route path="/matchesList" element={<ListTodayMatches/>}/>
+          <Route path="/tspolice" element={<Tspolice/>}/>
+          
         </Routes>
   
     </div>
