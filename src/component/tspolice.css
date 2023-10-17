@@ -1,0 +1,108 @@
+/* Add your CSS styles here */
+#login h1 {
+  padding: 10px;
+}
+.contact-text {
+  padding: 10px;
+  top: 15px;
+}
+.contact-text h5 {
+  color: #1474ac;
+  font-weight: bold;
+  font-size: 16px;
+}
+.contact-text h5.text-left:after {
+  content: "";
+  height: 1px;
+  background: red;
+  width: 100%;
+  display: block;
+  position: relative;
+  top: 5px;
+  opacity: 0.3;
+}
+.contact-text p {
+  color: #133b78;
+  margin: 0;
+}
+#login {
+  position: initial;
+}
+.footer-left-text {
+  text-align: left;
+}
+.footer-right-text {
+  text-align: right;
+}
+.right {
+  margin: 0% auto;
+  height: 100%;
+  background: #fff;
+}
+#wrapper {
+  min-height: 350px;
+  margin: 0px auto;
+  width: 100%;
+  position: relative;
+  padding: 0px;
+}
+#wrapper p {
+  margin-bottom: 0;
+  font-size: 17px;
+}
+.tlogo img {
+  width: 60%;
+}
+.navbar-dark {
+  background-color: #00315e !important;
+}
+
+/* Add your media queries here */
+@media only screen and (max-width: 740px) {
+  .container {
+    max-width: 100%;
+  }
+  .col-md-5 {
+    order: 1;
+  }
+  .contact-text {
+    background: #80808014;
+    padding: 15px;
+  }
+  .contact-text h5 {
+    color: #1474ac;
+    font-weight: bold;
+    font-size: 16px;
+  }
+  .contact-text h5.text-left:after {
+    content: "";
+    height: 1px;
+    background: red;
+    width: 100%;
+    display: block;
+    position: relative;
+    top: 5px;
+    opacity: 0.3;
+  }
+  .contact-text p {
+    color: #133b78;
+    margin: 0;
+  }
+  #login {
+    position: initial;
+  }
+  .footer-left-text, .footer-right-text {
+    text-align: center;
+  }
+  .footer-left-text strong {
+    display: block;
+  }
+}
+
+@media only screen and (max-width: 480px) {
+  /* Add your styles for smaller screens here */
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) {
+  /* Add your styles for iPad screens here */
+}
